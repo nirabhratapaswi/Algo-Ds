@@ -5,19 +5,19 @@ using namespace::std;
 struct linked_list {
 	int a;
 	linked_list *next;
-}*head=NULL, *tail=NULL, *nl, *sl;
+}*head=NULL, *nl, *sl;
 
 void insert(int x) {
 	nl = new linked_list;
 	nl->a=x;
-	nl->next=NULL;
+	//nl->next=NULL;
 	if(head==NULL) {
-		head=tail=nl;
+		head=nl;
 		head->next=NULL;
 	}
 	else {
-		tail->next=nl;
-		tail=nl;
+		nl->next=head;
+		head=nl;
 	}
 }
 
