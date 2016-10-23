@@ -5,19 +5,21 @@ using namespace::std;
 struct linked_list {
 	int a;
 	linked_list *next, *prev;
-}*head=NULL, *tail=NULL, *nl, *sl;
+}*head=NULL, *nl, *sl;
 
 void insert(int x) {
 	nl = new linked_list;
 	nl->a=x;
-	nl->next=NULL;
+	//nl->next=NULL;
 	if(head==NULL) {
-		head=tail=nl;
+		head=nl;
 		head->next=NULL;
+		head->prev=NULL;
 	}
 	else {
-		tail->next=nl;
-		tail=nl;
+		nl->next=head;
+		head->prev=nl;
+		head=nl;
 	}
 }
 
@@ -28,9 +30,9 @@ int print_linked_list() {
 		cout<<"\nEmpty linked list!!";
 		return 0;
 	}
-	cout<<"This is the linked list:\n";
+	cout<<"This is the linked list:\nNULL <--> ";
 	while(nl!=NULL) {
-		cout<<nl->a<<" -> ";
+		cout<<nl->a<<" <--> ";
 		nl=nl->next;
 	}
 	cout<<"NULL\n";
@@ -62,18 +64,24 @@ int remove(int x) {
 	}
 	nl=sl=head;
 	if(head->a==x) {
-		nl=head;
+		head->next->prev=NULL;
 		head=head->next;
 		delete(nl);
 	}
 	else {
+		nl=nl->next;
 		while(nl!=NULL) {
 			if(nl->a==x) {
-				sl->next=nl->next;
+				if(nl->next==NULL) {
+					nl->prev->next=NULL;
+					delete(nl);
+					return 0;
+				}
+				nl->next->prev=nl->prev;
+				nl->prev->next=nl->next;
 				delete(nl);
 				return 0;
 			}
-			sl=nl;
 			nl=nl->next;
 		}
 	}
