@@ -70,18 +70,127 @@ void printTree(node *tree) {
 	if(tree->right != NULL) {
 		printTree(tree->right);
 	}
+}		
+
+int deleteNode (node *tree, int key) {
+	node *prevNode = new node;
+	bool left = true;
+	if (tree == NULL) {
+		cout << "Tree is empty!!\n";
+		return 0;
+	}
+	while (true) {
+		cout << "Key: " << tree->id << endl;
+		if (tree == NULL) {
+			cout << "Key not found!!\n";
+			break;
+		}
+
+		else if (tree->id == key) {
+
+			if (tree->left == NULL && tree->right == NULL) {
+				cout << "Both children are NULL\n";
+				delete tree;
+				if (left) {
+					prevNode->left = NULL;
+				}
+				else {
+					prevNode->right = NULL;
+				}
+			}
+			else if ((tree->left == NULL && tree->right != NULL) || (tree->left != NULL && tree->right == NULL)) {
+				cout << "One children is NULL-";
+				if (tree->left == NULL) {
+					cout << "-left-";
+					if (left) {
+						cout << "-1-";
+						prevNode->left = tree->right;
+					}
+					else {
+						cout << "-2-";
+						prevNode->right = tree->right;
+					}
+				}
+				else {
+					cout << "-right-";
+					if(left) {
+						cout << "-1-";
+						prevNode->left = tree->left;
+					}
+					else {
+						cout << "-2-";
+						prevNode->right = tree->left;
+					}
+				}
+				delete tree;
+			}
+			else {
+				cout << "Both children not NULL-";
+				node *newPrevNode = new node;
+				prevNode = tree;
+				newPrevNode = tree;
+				tree = tree->right;
+				cout << "\n#start tree value: " << tree->id << "\n";
+				while (true) {
+					if (tree->left == NULL) {
+						cout << "##tree value: " << tree->id << "##\n";
+						if (tree->right != NULL) {
+							cout << "-1\n";
+							if (newPrevNode == prevNode) {
+								newPrevNode->right = tree->right;
+							}
+							else {
+								newPrevNode->left = tree->right;
+							}
+						}
+						else {
+							cout << "-2\n";
+							if (newPrevNode == prevNode) {
+								newPrevNode->right = NULL;
+							}
+							else {
+								newPrevNode->left = NULL;
+							}
+						}
+						prevNode->id = tree->id;
+						delete tree;
+						break;
+					}
+					newPrevNode = tree;
+					tree = tree->left;
+				}
+			}
+			break;
+
+		}
+
+		prevNode = tree;
+		if (key < tree->id) {
+			tree = tree->left;
+			left = true;
+			continue;
+		}
+		else {
+			tree = tree->right;
+			left = false;
+			continue;
+		}
+	}
 }
 
 int main() {
-        // cout<<endl<<"1 5 2 3 4"<<endl;
-	insert(1);
-	insert(5);
+        cout<<endl<<"0 5 2 3 1"<<endl;
+	insert(0);
+	insert(20);
+	insert(10);
+	insert(4);
 	insert(2);
-	insert(3);
-	insert(4);
-	insert(4);
-	insert(1);
-	insert(3);
+	insert(17);
+	insert(14);
+	insert(12);
+	insert(19);
+	printTree(root);
+	deleteNode(root, 10);
 	printTree(root);
 	return 0;
 }
